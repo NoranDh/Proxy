@@ -6,7 +6,7 @@ import os
 from uuid import uuid4
 
 from scripts.state import ProxyState
-from db import save_state, load_state
+from utils.db import save_state, load_state
 from scripts.proxyGraph import app as langgraph_app
 
 from dotenv import load_dotenv

@@ -1,7 +1,10 @@
 import json
+from pathlib import Path
 
-INPUT = r"C:\Users\Noran\Desktop\MECC_21\data\api571_mechanisms.json"
-OUTPUT = r"C:\Users\Noran\Desktop\MECC_21\data\api571_mechanisms_clean.json"
+BASE_DIR = Path(__file__).resolve().parents[1]
+
+INPUT = BASE_DIR / "data" / "api571_mechanisms.json"
+OUTPUT = BASE_DIR / "data" / "api571_mechanisms_clean.json"
 
 
 DROP_FIELDS = ["aliases", "references", "related_mechanisms"]
