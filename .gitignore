@@ -1,0 +1,39 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Virtual env / env managers
+env/
+ENV/
+
+# OS junk
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# Editor
+.idea/
+
+# Large / regenerable computer-vision assets (kept on disk, not tracked)
+MECC-Computer Vision/
+
+# Runtime-generated app data (kept on disk, not tracked)
+uploads/*
+!uploads/.gitkeep
+states/*
+!states/.gitkeep
+reports/*
+!reports/.gitkeep
+runs/*
+!runs/.gitkeep
+
+# Local db files (keep folder placeholder only)
+db/*
+!db/.gitkeep
