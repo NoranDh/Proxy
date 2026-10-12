@@ -1,22 +1,25 @@
 # app.py
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify
 
-from pathlib import Path 
-import sys 
+from pathlib import Path
+import sys
 from typing import List, Dict
 from flask_cors import CORS
-import os 
+import os
 
 from flask import Response
-from ultralytics import YOLO
 from werkzeug.utils import secure_filename
 
 ROOT = Path(__file__).resolve().parent
 
 MODEL_PATH = ROOT / "runs" / "classify" / "train7" / "weights" / "best.pt"
+FRONTEND_DIR = ROOT / "frontend" / "MECC"
 
-# Load model
-model = YOLO(str(MODEL_PATH))
+# Load model (off by default to save memory; set ENABLE_CV=1 to use /api/_imgcv)
+model = None
+if os.getenv("ENABLE_CV") == "1":
+    from ultralytics import YOLO
+    model = YOLO(str(MODEL_PATH))
 
 SCRIPTS = ROOT / "scripts"
 
@@ -30,7 +33,8 @@ from agents import Incident, SimilarCase
 from agents.reasoner import reasoner
 from agents.recommender import recommender
 
-app = Flask(__name__)
+# Serve the static frontend (Index/CV/Agent pages and their assets) from the site root
+app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
 CORS(app)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
@@ -170,12 +174,14 @@ def analyze():
 
 @app.route("/")
 def index():
-    return render_template("CV.html")
+    return app.send_static_file("Index.html")
 
 
-    
+
 @app.route("/api/_imgcv", methods=["POST"])
 def imgcv():
+    if model is None:
+        return jsonify({"error": "Image classification is disabled. Start the app with ENABLE_CV=1 to use it."}), 503
     if "file" not in request.files:
         return jsonify({"error": "No file part"}), 400
     f = request.files["file"]
@@ -199,7 +205,7 @@ def imgcv():
         f"Confidence: {final_prob}"
     )
 
-    return Response(text_output, mimetype="text/plain"), 20
+    return Response(text_output, mimetype="text/plain"), 200
 
 
 

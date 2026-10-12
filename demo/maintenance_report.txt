@@ -1,0 +1,24 @@
+MAINTENANCE DEPARTMENT - FAILURE REPORT (SAMPLE DATA FOR DEMONSTRATION)
+
+Equipment: Crude charge pump P-101A, single-stage overhung centrifugal pump (API 610 OH2)
+Driver: 250 kW electric motor, 2980 rpm
+Bearings: drive-end deep-groove ball bearing 6314, non-drive-end angular contact pair 7314, oil-bath lubricated (ISO VG 68 mineral oil)
+
+Event: Pump tripped on high bearing temperature and seized on 14 March at 02:40. Standby pump P-101B was started at 02:55.
+
+Findings on teardown (14-15 March):
+- Drive-end bearing inner race shows blue/brown heat discoloration and smeared raceway surface.
+- Bearing cage fractured in two places; several balls flattened.
+- Bearing housing oil was dark, with a burnt smell. Level was below the bottom of the sight glass.
+- Oil sample contained visible metallic particles.
+- Mechanical seal faces show scoring and heat checking. Seal failure appears secondary to shaft movement after the bearing collapsed.
+- Shaft journal under the drive-end bearing is scored; shaft runout measured 0.12 mm (limit 0.05 mm).
+- No evidence of water ingress or process fluid in the bearing housing.
+
+Maintenance history:
+- Last bearing replacement: 26 months ago (planned overhaul).
+- Last recorded oil change: 9 months ago. The preventive maintenance task for a 3-month oil change was deferred three times because of a work-order backlog.
+- The constant-level oiler bottle was found empty. It is not on the operator daily round checklist.
+- No previous bearing failures recorded on P-101A in the last 5 years.
+
+Repair: bearings, mechanical seal and shaft replaced. Pump returned to standby on 18 March.

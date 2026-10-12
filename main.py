@@ -8,6 +8,7 @@ from uuid import uuid4
 from scripts.state import ProxyState
 from utils.db import save_state, load_state
 from scripts.proxyGraph import app as langgraph_app
+from scripts.nodes.engineer_review_node import engineer_review_node
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,7 +18,12 @@ app = FastAPI()
 # allowing react frontend to access this API
 app.add_middleware(
     CORSMiddleware, 
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        # static frontend when it is served by the Flask app
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -182,9 +188,17 @@ def submit_review(case_id: str, body: dict):
     if body["decision"] == "edit" and body.get("root_cause"):
         state["root_cause"] = body ['root_cause']
 
-    save_state(case_id, state)
-    langgraph_app.update_state(config, state, as_node="engineer_review")
-    result = langgraph_app.invoke(None, config=config)
+    if body["decision"] == "reject":
+        # reset the analysis first, then re-run from the mechanism or 5 Whys step;
+        # the graph stops again at engineer_review to wait for a new decision
+        state.update(engineer_review_node(state))
+        state["stage"] = "mechanism" if state["stage"] == "mechanism" else "rca"
+        save_state(case_id, state)
+        result = langgraph_app.invoke(state, config=config)
+    else:
+        save_state(case_id, state)
+        langgraph_app.update_state(config, state, as_node="engineer_review")
+        result = langgraph_app.invoke(None, config=config)
     save_state(case_id, result)
 
     return {
@@ -246,3 +260,11 @@ def generate_report(case_id: str):
         media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         filename=f"RCA_Report_{case_id[:8]}.docx",
     )
+
+
+# Serve the static frontend (Index/Agent/Case pages) from the site root.
+# Mounted last so it never shadows the API routes above.
+from fastapi.staticfiles import StaticFiles
+
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend", "MECC")
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

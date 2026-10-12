@@ -1,0 +1,28 @@
+INSPECTION DEPARTMENT - CONDITION MONITORING AND INSPECTION FINDINGS (SAMPLE DATA FOR DEMONSTRATION)
+
+Equipment: Crude charge pump P-101A
+
+Vibration monitoring (drive-end bearing housing, horizontal, velocity mm/s RMS):
+- 12 weeks before failure: 2.1 (normal, alarm level 4.5, trip level 7.1)
+- 4 weeks before failure:  3.4
+- 3 days before failure:   6.8, with high-frequency bearing defect peaks at the inner-race frequency (BPFI)
+- Recommendation raised 3 days before failure: "Inspect drive-end bearing and lubrication at next opportunity." The notification was given priority 3 (within 30 days).
+
+Bearing temperature (drive-end RTD):
+- Normal operating value: 62 C
+- 24 hours before failure: 78 C
+- 2 hours before failure: 96 C
+- Trip at 110 C
+
+Visual and dimensional inspection after failure:
+- Raceway damage is consistent with lubricant starvation: smearing, adhesive wear and temper colours, with no corrosion pitting or fluting.
+- No fatigue beach marks on the cage fracture surfaces; fracture looks like overload after overheating.
+- Hardness of the inner race measured 52 HRC (specification 58-64 HRC), which indicates the race was softened by overheating.
+- Coupling alignment checked after removal: within tolerance (0.04 mm offset).
+- Baseplate and foundation bolts tight; no soft foot found.
+- Suction strainer clean. Impeller and wear rings in good condition, no cavitation damage.
+
+Oil analysis of the residual oil:
+- Viscosity at 40 C: 41 cSt (new oil 68 cSt)
+- Iron: 310 ppm (alarm 100 ppm)
+- Water: less than 100 ppm
