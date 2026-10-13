@@ -1,71 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta name="Main" content="with-device-width, initial-scale=1.0">
-        <title>Main page</title>
-        <link rel="stylesheet" href="Index.css"/>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Proxy - AI failure analysis</title>
+        <link rel="stylesheet" href="Index.css?v=2"/>
         <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    </head>
 
-    </head>   
-    
     <body>
-       
-        
-
-
-        <section class="header" >
+        <section class="header">
             <nav>
-                <a href="indexx.html"><img src="Logo.jpeg"></a>
+                <a href="Index.html"><img src="Logo.jpeg" alt="Proxy logo"></a>
                 <div class="nav-links" id="navLinks">
-                    <i class="fa-solid fa-xmark" onclick="hideMenu()"></i>
-
                     <ul>
-                        <li><a href="Index.html">Home</a> </li>
-                        <li><a href="CV.html">Digital Lab</a> </li>
-                        <li><a href="Agent.html">Agent</a> </li>
-                        <li><a href="Case.html">RCA Case</a> </li>
-
+                        <li><a href="Index.html">Home</a></li>
+                        <li><a href="CV.html">Digital Lab</a></li>
+                        <li><a href="Agent.html">Agent</a></li>
+                        <li><a href="Case.html">RCA Case</a></li>
                     </ul>
                 </div>
-                <i class="fa fa-bars" onclick="showMenu()"></i>
             </nav>
-            <div class="text-box">
+        </section>
+
+        <main class="home">
+            <div class="hero">
                 <h1>Proxy automates material failure analysis</h1>
-                <p>Proxy replaces manual lab testing by using AI and computer vision <br> to quickly and accurately analyze material performance<br>, saving time and reducing human error.</p>
+                <p>
+                    Proxy uses AI and computer vision to analyze equipment and material failures
+                    quickly and consistently, saving time and reducing human error.
+                </p>
             </div>
 
-        </section>
-        <!---cool squares--->
-      <div class="image-box">
-        <a href="CV.html">
-     
-  <img src="labpls.png"  class="insert1">
-<p class="independent1">Digital Lab</p>
-</a>
-</div>  
- <div class="image-box">
-     <a href="Agent.html">
-  <img src="agent.png"  class="insert2">
-<p class="independent2">Agent</p>
-</a>
-</div>
-       
-        </h1>
-        </div></a>
-    
-        <!------Javascript for the menu--->
-        <script>
-           var navLinks =  document.getElementById("navLinks");
+            <div class="tools">
+                <a class="tool-card" href="CV.html">
+                    <div class="tool-icon"><img src="labpls.png" alt=""></div>
+                    <h2>Digital Lab</h2>
+                    <p>Upload a photo of the damage and classify it as corrosion, cracking, fracture, leakage or rupture.</p>
+                    <span class="tool-link">Open Digital Lab &rarr;</span>
+                </a>
 
-           function showMenu(){
-            navLinks.style.right="0";
-           }
-           function hideMenu(){
-            navLinks.style.right="-200px";
-           }
-        </script>
-    </body>    
+                <a class="tool-card" href="Agent.html">
+                    <div class="tool-icon"><img src="agent.png" alt="" class="zoomed"></div>
+                    <h2>Agent</h2>
+                    <p>Describe a failure and get likely mechanisms, a 5 Whys analysis and recommendations grounded in API 571.</p>
+                    <span class="tool-link">Open Agent &rarr;</span>
+                </a>
+
+                <a class="tool-card" href="Case.html">
+                    <div class="tool-icon">
+                        <!-- three departments feeding one root cause -->
+                        <svg viewBox="0 0 64 64" aria-hidden="true">
+                            <circle cx="32" cy="32" r="30" fill="#111"/>
+                            <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 20v8a6 6 0 0 0 6 6h20a6 6 0 0 0 6-6v-8"/>
+                                <path d="M32 20v24"/>
+                            </g>
+                            <g fill="#fff">
+                                <circle cx="16" cy="18" r="4.5"/>
+                                <circle cx="32" cy="18" r="4.5"/>
+                                <circle cx="48" cy="18" r="4.5"/>
+                                <circle cx="32" cy="47" r="6"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h2>RCA Case</h2>
+                    <p>Combine maintenance, inspection and engineering evidence into a reviewed root cause analysis report.</p>
+                    <span class="tool-link">Open RCA Case &rarr;</span>
+                </a>
+            </div>
+        </main>
+    </body>
 </html>

@@ -403,7 +403,7 @@
                         <textarea id="description" rows="4"
                             placeholder="What failed, when, and what was observed."></textarea>
                     </label>
-                    <button class="btn" id="btn-create">Create case</button>
+                    <button class="btn" id="btn-next">Next: evidence &rarr;</button>
                 </div>
 
                 <!-- Step 2: evidence upload -->
@@ -434,6 +434,7 @@
                             <ul id="list-engineering"></ul>
                         </div>
                     </div>
+                    <button class="btn secondary" id="btn-back">&larr; Back: case details</button>
                     <button class="btn" id="btn-run">Run analysis</button>
                 </div>
 
@@ -606,25 +607,22 @@
             }
 
             /* ---------- Step 1 ---------- */
-            $('btn-create').addEventListener('click', () => {
-                const description = $('description').value.trim();
-                if (!description) {
+            // Steps 1 and 2 only switch panels, so the user can go back and forth without
+            // losing anything. The case is created on the server when the analysis is run.
+            $('btn-next').addEventListener('click', () => {
+                if (!$('description').value.trim()) {
                     alert('Please enter a failure description.');
                     return;
                 }
-                run('Creating case...', async () => {
-                    const data = await postJson('/projects', {
-                        description,
-                        equipment: $('equipment').value.trim() || null,
-                        location: $('location').value.trim() || null,
-                        severity: $('severity').value,
-                    });
-                    caseId = data.case_id;
-                    $('case-id').textContent = 'Case ID: ' + caseId;
-                    showPanels('evidence');
-                    setStep(2);
-                    setStatus('');
-                });
+                showPanels('evidence');
+                setStep(2);
+                setStatus('');
+            });
+
+            $('btn-back').addEventListener('click', () => {
+                showPanels('details');
+                setStep(1);
+                setStatus('');
             });
 
             /* ---------- Step 2 ---------- */
@@ -642,7 +640,16 @@
                     alert('Please add at least one evidence file.');
                     return;
                 }
-                run('Uploading evidence...', async () => {
+                run('Creating case...', async () => {
+                    const created = await postJson('/projects', {
+                        description: $('description').value.trim(),
+                        equipment: $('equipment').value.trim() || null,
+                        location: $('location').value.trim() || null,
+                        severity: $('severity').value,
+                    });
+                    caseId = created.case_id;
+                    $('case-id').textContent = 'Case ID: ' + caseId;
+
                     for (const { dept, file } of selected) {
                         setStatus('Uploading ' + file.name + '...');
                         const form = new FormData();

@@ -32,6 +32,15 @@ class Mechanism(BaseModel):
 class MechanismsOut(BaseModel):
     mechanisms: List[Mechanism]
 
+class Why(BaseModel):
+    level: int
+    question: str
+    answer: str
+
+class WhysOut(BaseModel):
+    whys: List[Why] = []
+    root_cause: str = ""
+
 class RecsOut(BaseModel):
     immediate: List[str]
     medium_term: List[str]

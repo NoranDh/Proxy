@@ -13,8 +13,14 @@ def synthesis_node(state: ProxyState) -> dict:
               Inspection: {state['dept_summaries'].get('inspection','')}
               Engineering: {state['dept_summaries'].get('engineering','')}
 
-              Return a structured summary: (1) What failed, (2) Observed conditions,
-                                            (3) key evidence from each department, (4) contradictions or gaps. """
+              Return a structured summary: (1) What failed, including the equipment type and specifications,
+                                            (2) Operating conditions at the time of failure,
+                                            (3) Sequence of events leading up to the failure,
+                                            (4) Observed conditions and symptoms,
+                                            (5) key evidence from each department, (6) contradictions or gaps.
+
+              Keep every specific value the departments reported (temperatures, pressures, flows,
+              measurements, dates and times). Do not replace numbers with general statements. """
     
     resp = llm.invoke([{"role":"user", "content": prompt}])
     return {"unified_context": resp.content, "stage": "5whys"}

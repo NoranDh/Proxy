@@ -32,6 +32,7 @@ from api571_loader import get_mechanism_entry, get_mechanism_name
 from agents import Incident, SimilarCase
 from agents.reasoner import reasoner
 from agents.recommender import recommender
+from agents.whys import five_whys
 
 # Serve the static frontend (Index/CV/Agent pages and their assets) from the site root
 app = Flask(__name__, static_folder=str(FRONTEND_DIR), static_url_path="")
@@ -155,6 +156,8 @@ def analyze():
         handbook_snips=handbook_snips,
     )
 
+    whys_out = five_whys(case=incident, mechanisms=mechs_out)
+
     recs_out = recommender(
         case=incident,
         mechanisms=mechs_out,
@@ -167,6 +170,7 @@ def analyze():
 
     return jsonify({
         "mechanisms": mechanisms_json,
+        "five_whys": whys_out.model_dump(),
         "recommendations": recs_json,
         "mechanism_label": mech_name,
         "mechanism_id": mech_id,
