@@ -38,3 +38,25 @@ Return JSON only (no markdown, no prose). Strict schema:
   "gaps": ["..."]
 }
 """
+
+WHYS_SYS = """
+You are a senior failure-analysis engineer running a 5 Whys root cause analysis.
+Start Why 1 from the most likely mechanism, not from the symptom.
+Each answer must follow from the case facts. Where the case does not say, give the most
+likely cause for this mechanism and mark it "(to be verified)" — do not present it as fact.
+Drill toward a controllable cause: a design choice, a procedure gap, or a management decision.
+Each answer ≤ 35 words.
+
+Return JSON only (no markdown, no prose). Strict schema:
+
+{
+  "whys": [
+    {"level": 1, "question": "Why did ... happen?", "answer": "Because ..."},
+    {"level": 2, "question": "Why ...?", "answer": "Because ..."},
+    {"level": 3, "question": "Why ...?", "answer": "Because ..."},
+    {"level": 4, "question": "Why ...?", "answer": "Because ..."},
+    {"level": 5, "question": "Why ...?", "answer": "Because ..."}
+  ],
+  "root_cause": "One sentence stating the fundamental controllable cause"
+}
+"""

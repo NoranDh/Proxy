@@ -182,6 +182,34 @@
             margin-bottom: 16px;
         }
 
+        .agent-whys{
+            list-style:none;
+            margin-bottom: 16px;
+        }
+
+        .agent-whys li{
+            border-left: 3px solid #8ab5d1;
+            padding: 6px 0 6px 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .agent-whys .q{
+            font-weight: 600;
+        }
+
+        .agent-rootcause{
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.5;
+            background:#e6f0f6;
+            border-left: 4px solid #8ab5d1;
+            border-radius: 10px;
+            padding:10px 12px;
+            margin-bottom: 16px;
+        }
+
         .agent-recs h4{
             font-size: 14px;
             margin: 10px 0 4px;
@@ -214,6 +242,7 @@
                         <li><a href="Index.html">Home</a></li>
                         <li><a href="CV.html">Digital Lab</a></li>
                         <li><a href="Agent.html">Agent</a></li>
+                        <li><a href="Case.html">RCA Case</a></li>
                     </ul>
                 </div>
             </nav>
@@ -322,6 +351,13 @@
                     <h2 class="agent-section-title">Mechanism assessment</h2>
                     <div id="agent-mechanisms" class="agent-mechanisms"></div>
 
+                    <div id="agent-whys-section">
+                        <h2 class="agent-section-title">5 Whys analysis</h2>
+                        <ul id="agent-whys" class="agent-whys"></ul>
+                        <h2 class="agent-section-title">Root cause</h2>
+                        <div id="agent-rootcause" class="agent-rootcause"></div>
+                    </div>
+
                     <h2 class="agent-section-title">Recommendations</h2>
                     <div id="agent-recs" class="agent-recs"></div>
                 </div>
@@ -386,6 +422,19 @@
                     mechBox.textContent = mechs.map(m =>
                         `${m.name} — ${(m.confidence * 100).toFixed(0)}% confidence\n${m.reasoning}`
                     ).join('\n\n');
+
+                    const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => (
+                        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+                    ));
+                    const fiveWhys = data.five_whys || {};
+                    const whys = fiveWhys.whys || [];
+                    document.getElementById('agent-whys').innerHTML = whys.map(w => `
+                        <li>
+                            <div class="q">Why ${escapeHtml(w.level)}: ${escapeHtml(w.question)}</div>
+                            <div>${escapeHtml(w.answer)}</div>
+                        </li>`).join('');
+                    document.getElementById('agent-rootcause').textContent = fiveWhys.root_cause || '';
+                    document.getElementById('agent-whys-section').style.display = whys.length ? 'block' : 'none';
 
                     const rec = data.recommendations || {};
                     const listHtml = (items) => (items || []).map(i => `<li>${i}</li>`).join('');

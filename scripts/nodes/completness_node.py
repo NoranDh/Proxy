@@ -23,7 +23,14 @@ Below is the synthesized incident report from three departments:
 {unified_context}
 ---
 
+Below is the original evidence the report was written from. The report is a summary and
+may have left details out, so check here before deciding that something is missing:
+---
+{evidence}
+---
+
 Assess whether the above contains enough information to begin root cause analysis.
+Information counts as present if it appears in either the report or the original evidence.
 
 Respond ONLY with valid JSON in this exact format, no extra text:
 {{
@@ -50,8 +57,14 @@ Rules:
 def completeness_check_node(state: ProxyState) -> dict:
     llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
+    # the synthesis is a summary, so also show the model what the departments actually submitted
+    evidence_parts = [f"Case description: {state.get('raw_input') or 'Not provided'}"]
+    for dept, summary in (state.get("dept_summaries") or {}).items():
+        evidence_parts.append(f"{dept.capitalize()} department:\n{summary or 'Nothing submitted'}")
+
     prompt = COMPLETENESS_PROMPT.format(
-        unified_context=state.get("unified_context", "")
+        unified_context=state.get("unified_context", ""),
+        evidence="\n\n".join(evidence_parts)
     )
 
     resp = llm.invoke([{"role": "user", "content": prompt}])

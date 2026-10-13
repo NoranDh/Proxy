@@ -7,7 +7,8 @@ from langchain_experimental.text_splitter import SemanticChunker
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
-
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from transformers import AutoTokenizer
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -26,7 +27,18 @@ embedding = HuggingFaceEmbeddings(model_name=EMB_MODEL_NAME)
 chunker = SemanticChunker(
     embedding,
     breakpoint_threshold_type="percentile",   # semantic breaks
-    # breakpoint_threshold_amount=90,         
+    # breakpoint_threshold_amount=90,
+)
+
+# Second pass: SemanticChunker has no max size, and the embedding model only
+# reads the first 256 tokens of a chunk, so cap every chunk (with overlap).
+MAX_CHUNK_TOKENS = 250      # 256 minus room for the [CLS]/[SEP] tokens
+CHUNK_OVERLAP_TOKENS = 40
+
+size_capper = RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
+    AutoTokenizer.from_pretrained(EMB_MODEL_NAME),
+    chunk_size=MAX_CHUNK_TOKENS,
+    chunk_overlap=CHUNK_OVERLAP_TOKENS,
 )
 
 
@@ -138,6 +150,7 @@ def chunk_case_section(case_id: str, file_name: str, section_key: str, section_t
 
     # Create semantic chunks from this section
     docs = chunker.create_documents([section_text])
+    docs = size_capper.split_documents(docs)
 
     for i, d in enumerate(docs):
         d.metadata["source"] = "case"
@@ -205,6 +218,7 @@ def ingest_handbooks() -> List[Document]:
 
         # Single long text -> semantic chunks
         docs = chunker.create_documents([full_text])
+        docs = size_capper.split_documents(docs)
 
         for i, d in enumerate(docs):
             d.metadata["source"] = "hb"

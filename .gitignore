@@ -37,3 +37,18 @@ runs/*
 # Local db files (keep folder placeholder only)
 db/*
 !db/.gitkeep
+
+# Locally generated CA bundle (see scripts/make_ca_bundle.py)
+certs/
+
+# Reference data and generated indexes (copied/built locally, not tracked)
+data/api571_mechanisms_clean.json
+data/extracted_cases/
+data/handbook/*.pdf
+data/rag_faiss_index/
+
+# LangGraph checkpoint database (runtime-generated)
+checkpoint.db*
+
+# Local launcher with machine-specific Python paths
+start_demo.bat

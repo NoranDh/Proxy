@@ -46,6 +46,11 @@ def rca_node(state: ProxyState) -> dict:
         unified_context = state.get("unified_context", "")
     )
 
+    # engineer rejected the previous analysis: tell the model what to correct
+    feedback = state.get("review_feedback")
+    if feedback:
+        prompt += f"\nThe reviewing engineer rejected the previous analysis with this feedback. Address it:\n{feedback}\n"
+
     result = {
         "rca_whys": [],
         "root_cause": None,

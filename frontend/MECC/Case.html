@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Proxy - RCA Case</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+        <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:"Montserrat", sans-serif;
+        }
+        body {
+            min-height:100vh;
+            background: url("whitbg.jpeg") center/cover no-repeat fixed;
+            padding-top: 100px;
+            color:#333;
+        }
+
+        .header{
+            width:100%;
+            top:0;
+            position: absolute;
+            z-index: 10;
+        }
+        nav{
+            display:flex;
+            padding:2% 6%;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav img{
+            width:150px;
+        }
+        .nav-links{
+            flex:1;
+            text-align: right;
+        }
+        .nav-links ul li{
+            list-style:none;
+            display:inline-block;
+            padding: 8px 12px;
+            position: relative;
+        }
+        .nav-links ul li a{
+            color:#404143;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .nav-links ul li::after{
+            content:'';
+            width:0%;
+            height: 2px;
+            background: #404143;
+            display: block;
+            margin:auto;
+            transition:0.5s;
+        }
+        .nav-links ul li:hover::after{
+            width:100%;
+        }
+
+        /* ---------- Case workflow styles ---------- */
+
+        .case-wrapper{
+            max-width: 950px;
+            margin: 40px auto 0;
+            padding: 24px 28px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+        .case-title{
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .case-subtitle{
+            font-size: 14px;
+            color:#555;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .steps{
+            display:flex;
+            gap: 6px;
+            list-style:none;
+            margin-bottom: 22px;
+        }
+        .steps li{
+            flex:1;
+            text-align:center;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 4px;
+            border-radius: 999px;
+            background:#ececec;
+            color:#888;
+        }
+        .steps li.active{
+            background:#404143;
+            color:#fff;
+        }
+        .steps li.done{
+            background:#8ab5d1;
+            color:#fff;
+        }
+
+        .panel{
+            display:none;
+        }
+        .panel.show{
+            display:block;
+        }
+        .panel h2{
+            font-size: 17px;
+            font-weight: 600;
+            margin: 18px 0 8px;
+        }
+        .panel h2:first-child{
+            margin-top: 0;
+        }
+        .hint{
+            font-size: 12px;
+            color:#666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .field-row{
+            display:flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .field-row label{
+            flex:1;
+            min-width: 180px;
+        }
+        label{
+            display:block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        input[type=text], select, textarea{
+            width:100%;
+            margin-top: 4px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border:1px solid #ccc;
+            font-size: 13px;
+            background:#fff;
+            resize: vertical;
+        }
+
+        .btn{
+            margin: 6px 8px 0 0;
+            padding: 8px 18px;
+            border-radius: 999px;
+            border:none;
+            cursor:pointer;
+            font-size: 13px;
+            font-weight: 600;
+            background:#404143;
+            color:#fff;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn:hover{
+            background:#2e2f31;
+            transform: translateY(-1px);
+        }
+        .btn.secondary{
+            background:#fff;
+            color:#404143;
+            border:1px solid #404143;
+        }
+        .btn.secondary:hover{
+            background:#f1f1f1;
+        }
+        .btn:disabled{
+            opacity:0.5;
+            cursor:not-allowed;
+            transform:none;
+        }
+
+        .depts{
+            display:grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .dept{
+            background:#f7f7f7;
+            border:1px dashed #b3b3b3;
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .dept h3{
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .dept input[type=file]{
+            width:100%;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        .dept ul{
+            list-style:none;
+            margin-top: 8px;
+            font-size: 12px;
+            color:#444;
+            word-break: break-all;
+        }
+
+        .status{
+            display:none;
+            margin-top: 16px;
+            font-size: 13px;
+            align-items:center;
+            gap:8px;
+        }
+        .status.show{
+            display:flex;
+        }
+        .status.error{
+            color:#a12a2a;
+        }
+        .spinner{
+            width:16px;
+            height:16px;
+            flex:none;
+            border-radius:50%;
+            border:2px solid #b3b3b3;
+            border-top-color:#404143;
+            animation: spin 0.8s linear infinite;
+        }
+        .status.error .spinner, .status.idle .spinner{
+            display:none;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        .box{
+            font-size: 13px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            background:#f7f7f7;
+            border-radius: 10px;
+            padding:10px 12px;
+        }
+        .box.highlight{
+            background:#e6f0f6;
+            border-left: 4px solid #8ab5d1;
+            font-weight: 600;
+        }
+        .cards{
+            display:grid;
+            gap: 10px;
+        }
+        .card{
+            background:#f7f7f7;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .card strong{
+            display:block;
+            margin-bottom: 2px;
+        }
+        .card small{
+            color:#666;
+        }
+        .badge{
+            display:inline-block;
+            margin-left: 6px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background:#404143;
+            color:#fff;
+            font-size: 11px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .whys{
+            list-style:none;
+        }
+        .whys li{
+            border-left: 3px solid #8ab5d1;
+            padding: 6px 0 6px 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .whys .q{
+            font-weight: 600;
+        }
+        table{
+            width:100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+        th, td{
+            text-align:left;
+            padding: 7px 8px;
+            border-bottom:1px solid #e2e2e2;
+            vertical-align: top;
+            line-height: 1.45;
+        }
+        th{
+            background:#f1f1f1;
+            font-weight: 600;
+        }
+        .review-extra{
+            display:none;
+            margin-top: 12px;
+        }
+        .review-extra.show{
+            display:block;
+        }
+        .case-id{
+            font-size: 11px;
+            color:#888;
+            margin-top: 18px;
+        }
+
+        @media (max-width: 768px){
+            .case-wrapper{
+                margin: 20px;
+                padding:18px;
+            }
+            .depts{
+                grid-template-columns: 1fr;
+            }
+            .steps{
+                flex-wrap: wrap;
+            }
+        }
+        </style>
+    </head>
+    <body>
+        <section class="header">
+            <nav>
+                <a href="Index.html"><img src="Logo.jpeg" alt="Proxy logo"></a>
+                <div class="nav-links" id="navLinks">
+                    <ul>
+                        <li><a href="Index.html">Home</a></li>
+                        <li><a href="CV.html">Digital Lab</a></li>
+                        <li><a href="Agent.html">Agent</a></li>
+                        <li><a href="Case.html">RCA Case</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </section>
+
+        <section class="page">
+            <div class="case-wrapper">
+                <h1 class="case-title">Root Cause Analysis Case</h1>
+                <p class="case-subtitle">
+                    Open a failure case, upload the evidence from each department, and let Proxy
+                    identify the failure mechanism, run a 5 Whys analysis, and write the RCA report.
+                    You review and approve the root cause before the report is generated.
+                </p>
+
+                <ol class="steps" id="steps">
+                    <li data-step="1">1. Case details</li>
+                    <li data-step="2">2. Evidence</li>
+                    <li data-step="3">3. Analysis</li>
+                    <li data-step="4">4. Review</li>
+                    <li data-step="5">5. Report</li>
+                </ol>
+
+                <!-- Step 1: case details -->
+                <div class="panel" id="panel-details">
+                    <h2>Case details</h2>
+                    <div class="field-row">
+                        <label>
+                            Equipment / tag number
+                            <input type="text" id="equipment" placeholder="e.g. Centrifugal pump P-101A">
+                        </label>
+                        <label>
+                            Location
+                            <input type="text" id="location" placeholder="e.g. Crude unit, Area 3">
+                        </label>
+                        <label>
+                            Severity
+                            <select id="severity">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high" selected>High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </label>
+                    </div>
+                    <label>
+                        Failure description
+                        <textarea id="description" rows="4"
+                            placeholder="What failed, when, and what was observed."></textarea>
+                    </label>
+                    <button class="btn" id="btn-next">Next: evidence &rarr;</button>
+                </div>
+
+                <!-- Step 2: evidence upload -->
+                <div class="panel" id="panel-evidence">
+                    <h2>Upload evidence</h2>
+                    <p class="hint">
+                        Add at least one file. Accepted: text (.txt), PDF, CSV, and photos (.jpg, .png).
+                        The analysis works best when the files together cover the equipment, the operating
+                        conditions, the sequence of events, and the observed symptoms.
+                    </p>
+                    <div class="depts">
+                        <div class="dept">
+                            <h3>Maintenance</h3>
+                            <p class="hint">Work orders, repair history, what was found on teardown.</p>
+                            <input type="file" id="file-maintenance" multiple accept=".txt,.pdf,.csv,image/*">
+                            <ul id="list-maintenance"></ul>
+                        </div>
+                        <div class="dept">
+                            <h3>Inspection</h3>
+                            <p class="hint">Inspection and NDT findings, vibration readings, failure photos.</p>
+                            <input type="file" id="file-inspection" multiple accept=".txt,.pdf,.csv,image/*">
+                            <ul id="list-inspection"></ul>
+                        </div>
+                        <div class="dept">
+                            <h3>Engineering</h3>
+                            <p class="hint">Design data, operating conditions, process trends, event timeline.</p>
+                            <input type="file" id="file-engineering" multiple accept=".txt,.pdf,.csv,image/*">
+                            <ul id="list-engineering"></ul>
+                        </div>
+                    </div>
+                    <button class="btn secondary" id="btn-back">&larr; Back: case details</button>
+                    <button class="btn" id="btn-run">Run analysis</button>
+                </div>
+
+                <!-- Clarification (only shown when the agent needs more information) -->
+                <div class="panel" id="panel-clarify">
+                    <h2>More information needed</h2>
+                    <p class="hint">The evidence is missing something the analysis needs. Answer the question to continue.</p>
+                    <div class="box highlight" id="clarify-question"></div>
+                    <label style="margin-top:12px;">
+                        Your answer
+                        <textarea id="clarify-answer" rows="3"></textarea>
+                    </label>
+                    <button class="btn" id="btn-clarify">Submit answer</button>
+                </div>
+
+                <!-- Steps 3-4: analysis results and engineer review -->
+                <div class="panel" id="panel-analysis">
+                    <h2>Incident summary</h2>
+                    <div class="box" id="out-context"></div>
+
+                    <h2>Candidate failure modes</h2>
+                    <div class="cards" id="out-candidates"></div>
+
+                    <h2>Confirmed mechanism <span class="badge" id="out-confidence"></span></h2>
+                    <div class="box" id="out-mechanism"></div>
+                    <p class="hint" id="out-reasoning" style="margin-top:8px;"></p>
+
+                    <h2>5 Whys</h2>
+                    <ul class="whys" id="out-whys"></ul>
+
+                    <h2>Root cause</h2>
+                    <div class="box highlight" id="out-rootcause"></div>
+
+                    <div id="review-actions">
+                        <h2>Engineer review</h2>
+                        <p class="hint">Accept the root cause, correct it yourself, or reject it and have the 5 Whys re-run.</p>
+                        <button class="btn" id="btn-accept">Accept</button>
+                        <button class="btn secondary" id="btn-edit">Edit root cause</button>
+                        <button class="btn secondary" id="btn-reject">Reject</button>
+
+                        <div class="review-extra" id="edit-box">
+                            <label>
+                                Corrected root cause
+                                <textarea id="edit-text" rows="3"></textarea>
+                            </label>
+                            <button class="btn" id="btn-edit-submit">Save and continue</button>
+                        </div>
+                        <div class="review-extra" id="reject-box">
+                            <label>
+                                What is wrong with this analysis?
+                                <textarea id="reject-text" rows="3" placeholder="e.g. The reasoning chain skips the lubrication schedule."></textarea>
+                            </label>
+                            <button class="btn" id="btn-reject-submit">Reject and re-run</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: recommendations and report -->
+                <div class="panel" id="panel-report">
+                    <h2>Recommendations</h2>
+                    <table>
+                        <thead><tr><th style="width:16%;">Priority</th><th style="width:38%;">Action</th><th>Rationale</th></tr></thead>
+                        <tbody id="out-recs"></tbody>
+                    </table>
+
+                    <h2>Action plan</h2>
+                    <table>
+                        <thead><tr><th style="width:8%;">Step</th><th>Action</th><th style="width:18%;">Owner</th><th style="width:20%;">Timeline</th></tr></thead>
+                        <tbody id="out-plan"></tbody>
+                    </table>
+
+                    <h2>RCA report</h2>
+                    <p class="hint">Downloads the full report as a Word document. Generating it takes up to a minute.</p>
+                    <button class="btn" id="btn-report">Download report (.docx)</button>
+                    <button class="btn secondary" id="btn-new">Start a new case</button>
+                </div>
+
+                <div class="status" id="status">
+                    <div class="spinner"></div>
+                    <span id="status-text"></span>
+                </div>
+                <p class="case-id" id="case-id"></p>
+            </div>
+        </section>
+
+        <div style="height:80px;"></div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Same origin when the page is served by the FastAPI backend, otherwise call it directly.
+            const API = location.port === '8000' ? '' : 'http://127.0.0.1:8000';
+            const DEPTS = ['maintenance', 'inspection', 'engineering'];
+
+            let caseId = null;
+
+            const $ = (id) => document.getElementById(id);
+            const panels = ['details', 'evidence', 'clarify', 'analysis', 'report'];
+
+            function esc(value) {
+                return String(value ?? '').replace(/[&<>"']/g, (c) => (
+                    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+                ));
+            }
+
+            // The incident summary comes back as light markdown; show headings and bold text properly.
+            function formatText(value) {
+                return esc(value)
+                    .replace(/^#{1,6}\s*(.+)$/gm, '<strong>$1</strong>')
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            }
+
+            function showPanels(...names) {
+                panels.forEach((p) => $('panel-' + p).classList.toggle('show', names.includes(p)));
+            }
+
+            function setStep(current) {
+                document.querySelectorAll('#steps li').forEach((li) => {
+                    const n = Number(li.dataset.step);
+                    li.classList.toggle('active', n === current);
+                    li.classList.toggle('done', n < current);
+                });
+            }
+
+            function setStatus(text, mode) {
+                const box = $('status');
+                box.className = 'status' + (text ? ' show' : '') + (mode ? ' ' + mode : '');
+                $('status-text').textContent = text || '';
+            }
+
+            function setBusy(busy) {
+                document.querySelectorAll('.btn').forEach((b) => { b.disabled = busy; });
+            }
+
+            async function api(path, options) {
+                let resp;
+                try {
+                    resp = await fetch(API + path, options);
+                } catch (_) {
+                    throw new Error('Cannot reach the analysis server. Check that the FastAPI backend is running on port 8000.');
+                }
+                if (!resp.ok) {
+                    let msg = 'Server error (' + resp.status + ')';
+                    try {
+                        const data = await resp.json();
+                        if (data && data.detail) msg = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+                    } catch (_) {}
+                    throw new Error(msg);
+                }
+                return resp;
+            }
+
+            const postJson = (path, body) => api(path, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body || {}),
+            }).then((r) => r.json());
+
+            // Runs one server step with the buttons locked and a status line shown.
+            async function run(message, fn) {
+                setBusy(true);
+                setStatus(message);
+                try {
+                    await fn();
+                } catch (err) {
+                    console.error(err);
+                    setStatus('Error: ' + err.message, 'error');
+                } finally {
+                    setBusy(false);
+                }
+            }
+
+            /* ---------- Step 1 ---------- */
+            // Steps 1 and 2 only switch panels, so the user can go back and forth without
+            // losing anything. The case is created on the server when the analysis is run.
+            $('btn-next').addEventListener('click', () => {
+                if (!$('description').value.trim()) {
+                    alert('Please enter a failure description.');
+                    return;
+                }
+                showPanels('evidence');
+                setStep(2);
+                setStatus('');
+            });
+
+            $('btn-back').addEventListener('click', () => {
+                showPanels('details');
+                setStep(1);
+                setStatus('');
+            });
+
+            /* ---------- Step 2 ---------- */
+            DEPTS.forEach((dept) => {
+                $('file-' + dept).addEventListener('change', (e) => {
+                    $('list-' + dept).innerHTML = Array.from(e.target.files)
+                        .map((f) => '<li>' + esc(f.name) + '</li>').join('');
+                });
+            });
+
+            $('btn-run').addEventListener('click', () => {
+                const selected = DEPTS.flatMap((dept) =>
+                    Array.from($('file-' + dept).files).map((file) => ({ dept, file })));
+                if (!selected.length) {
+                    alert('Please add at least one evidence file.');
+                    return;
+                }
+                run('Creating case...', async () => {
+                    const created = await postJson('/projects', {
+                        description: $('description').value.trim(),
+                        equipment: $('equipment').value.trim() || null,
+                        location: $('location').value.trim() || null,
+                        severity: $('severity').value,
+                    });
+                    caseId = created.case_id;
+                    $('case-id').textContent = 'Case ID: ' + caseId;
+
+                    for (const { dept, file } of selected) {
+                        setStatus('Uploading ' + file.name + '...');
+                        const form = new FormData();
+                        form.append('dept', dept);
+                        form.append('file', file);
+                        const res = await api('/projects/' + caseId + '/upload', { method: 'POST', body: form })
+                            .then((r) => r.json());
+                        if (res.error) throw new Error(res.error);
+                    }
+                    setStep(3);
+                    showPanels();
+                    setStatus('Analyzing: reading the evidence, identifying the mechanism, running the 5 Whys. This takes about a minute...');
+                    const result = await postJson('/projects/' + caseId + '/start');
+                    await afterAnalysis(result);
+                });
+            });
+
+            /* ---------- Clarification ---------- */
+            $('btn-clarify').addEventListener('click', () => {
+                const answer = $('clarify-answer').value.trim();
+                if (!answer) {
+                    alert('Please enter an answer.');
+                    return;
+                }
+                run('Continuing the analysis with your answer. This takes about a minute...', async () => {
+                    showPanels();
+                    const result = await postJson('/projects/' + caseId + '/clarify', { answer });
+                    await afterAnalysis(result);
+                });
+            });
+
+            async function afterAnalysis(result) {
+                if (result.needs_clarification) {
+                    $('clarify-question').textContent = result.clarification_question || 'Please provide more detail about the failure.';
+                    $('clarify-answer').value = '';
+                    showPanels('clarify');
+                    setStep(3);
+                    setStatus('');
+                    return;
+                }
+                await showAnalysis();
+            }
+
+            /* ---------- Steps 3-4 ---------- */
+            async function showAnalysis() {
+                const state = await api('/projects/' + caseId).then((r) => r.json());
+
+                $('out-context').innerHTML = formatText(state.unified_context || 'Not available');
+
+                $('out-candidates').innerHTML = (state.failure_mode_candidates || []).map((c) => `
+                    <div class="card">
+                        <strong>${esc(c.mode)}</strong>
+                        ${esc(c.mechanism)}
+                        ${(c.supporting_symptoms || []).length
+                            ? '<br><small>Supported by: ' + esc(c.supporting_symptoms.join('; ')) + '</small>' : ''}
+                    </div>`).join('') || '<div class="card">No candidates returned.</div>';
+
+                $('out-mechanism').textContent = state.confirmed_mechanism || 'Not available';
+                $('out-reasoning').textContent = state.mechanism_reasoning || '';
+                const conf = Number(state.rca_confidence);
+                $('out-confidence').textContent = conf > 0 ? Math.round(conf * 100) + '% confidence' : '';
+                $('out-confidence').style.display = conf > 0 ? 'inline-block' : 'none';
+
+                $('out-whys').innerHTML = (state.rca_whys || []).map((w) => `
+                    <li>
+                        <div class="q">Why ${esc(w.level)}: ${esc(w.question)}</div>
+                        <div>${esc(w.answer || 'Not answered')}</div>
+                    </li>`).join('') || '<li>The 5 Whys analysis did not return a result. Reject to re-run it.</li>';
+
+                $('out-rootcause').textContent = state.root_cause || 'Not determined';
+                $('edit-text').value = state.root_cause || '';
+                $('reject-text').value = '';
+                $('edit-box').classList.remove('show');
+                $('reject-box').classList.remove('show');
+                $('review-actions').style.display = 'block';
+
+                showPanels('analysis');
+                setStep(4);
+                setStatus('');
+                return state;
+            }
+
+            $('btn-edit').addEventListener('click', () => {
+                $('edit-box').classList.toggle('show');
+                $('reject-box').classList.remove('show');
+            });
+            $('btn-reject').addEventListener('click', () => {
+                $('reject-box').classList.toggle('show');
+                $('edit-box').classList.remove('show');
+            });
+
+            function approve(body) {
+                run('Writing recommendations and the action plan. This takes about a minute...', async () => {
+                    await postJson('/projects/' + caseId + '/review', body);
+                    await showReport();
+                });
+            }
+
+            $('btn-accept').addEventListener('click', () => approve({ decision: 'accept' }));
+
+            $('btn-edit-submit').addEventListener('click', () => {
+                const rootCause = $('edit-text').value.trim();
+                if (!rootCause) {
+                    alert('Please enter the corrected root cause.');
+                    return;
+                }
+                approve({ decision: 'edit', root_cause: rootCause });
+            });
+
+            $('btn-reject-submit').addEventListener('click', () => {
+                const feedback = $('reject-text').value.trim();
+                if (!feedback) {
+                    alert('Please say what is wrong so the analysis can be re-run.');
+                    return;
+                }
+                run('Re-running the analysis...', async () => {
+                    await postJson('/projects/' + caseId + '/review', { decision: 'reject', feedback });
+                    await showAnalysis();
+                });
+            });
+
+            /* ---------- Step 5 ---------- */
+            async function showReport() {
+                const state = await showAnalysis();
+                $('review-actions').style.display = 'none';
+
+                const recs = state.kb_recommendations || [];
+                $('out-recs').innerHTML = recs.map((r) => (typeof r === 'string'
+                    ? `<tr><td></td><td colspan="2">${esc(r)}</td></tr>`
+                    : `<tr><td>${esc(r.priority)}</td><td>${esc(r.action)}</td><td>${esc(r.rationale)}</td></tr>`
+                )).join('') || '<tr><td colspan="3">No recommendations returned.</td></tr>';
+
+                const plan = state.action_plan || [];
+                $('out-plan').innerHTML = plan.map((s) => (typeof s === 'string'
+                    ? `<tr><td></td><td colspan="3">${esc(s)}</td></tr>`
+                    : `<tr><td>${esc(s.step)}</td><td>${esc(s.action)}</td><td>${esc(s.owner)}</td><td>${esc(s.timeline)}</td></tr>`
+                )).join('') || '<tr><td colspan="4">No action plan returned.</td></tr>';
+
+                showPanels('analysis', 'report');
+                setStep(5);
+                setStatus('');
+                $('panel-report').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            $('btn-report').addEventListener('click', () => {
+                run('Generating the report. This takes up to a minute...', async () => {
+                    const resp = await api('/projects/' + caseId + '/report', { method: 'POST' });
+                    const blob = await resp.blob();
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = 'RCA_Report_' + caseId.slice(0, 8) + '.docx';
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    URL.revokeObjectURL(link.href);
+                    setStatus('Report downloaded.', 'idle');
+                });
+            });
+
+            $('btn-new').addEventListener('click', () => location.reload());
+
+            showPanels('details');
+            setStep(1);
+        });
+        </script>
+    </body>
+</html>

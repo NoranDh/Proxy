@@ -1,0 +1,27 @@
+ENGINEERING DEPARTMENT - PROCESS AND DESIGN DATA (SAMPLE DATA FOR DEMONSTRATION)
+
+Equipment: Crude charge pump P-101A, crude distillation unit
+Service: stabilized crude oil, pumping temperature 145 C
+Material: carbon steel casing, 12% Cr impeller, AISI 4140 shaft
+
+Design and operating conditions:
+- Rated flow 420 m3/h at 185 m head; best efficiency point 430 m3/h
+- Suction pressure 3.2 barg, discharge pressure 18.5 barg
+- Operating point at the time of failure: 410 m3/h (95% of best efficiency point), steady
+- No process upset, no flow or pressure excursions in the 7 days before failure
+- NPSH available 9.5 m against 5.2 m required
+- Ambient temperature 38-44 C during the week of the failure
+
+Sequence of events:
+- 11 March 09:15  Vibration notification raised by Inspection (priority 3)
+- 13 March 02:30  Bearing temperature high alarm (85 C) acknowledged by the panel operator; no field check recorded
+- 14 March 00:40  Bearing temperature reached 96 C
+- 14 March 02:40  Pump tripped on bearing temperature high-high (110 C) and seized
+- 14 March 02:55  Standby pump P-101B started; unit throughput reduced by 15% for 4 hours
+
+Engineering review:
+- Manufacturer specifies an oil change every 3 months or 2000 running hours for this bearing housing at pumping temperatures above 120 C. The pump had run about 6500 hours since the last oil change.
+- The preventive maintenance task interval in the maintenance system is set to 3 months, but the system allows unlimited deferral without engineering approval.
+- The high-temperature alarm response procedure requires a field check within one shift. It was not carried out.
+- Pump selection, hydraulic loading and alignment are within design limits. There is no indication of a design deficiency.
+- The sister pump P-101B has the same lubrication arrangement and the same deferred oil-change tasks.

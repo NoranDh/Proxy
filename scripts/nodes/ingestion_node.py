@@ -1,9 +1,18 @@
+import base64
+import mimetypes
+
 import fitz
 import pandas as pd
-from langchain_openai import ChatOpenAI 
+from langchain_openai import ChatOpenAI
 from scripts.state import ProxyState
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0) # zero creativty to only extract data 
+llm = ChatOpenAI(model="gpt-4o", temperature=0) # zero creativty to only extract data
+
+def to_base64(path: str) -> str:
+    # image file -> data URL the vision model accepts
+    mime = mimetypes.guess_type(path)[0] or "image/jpeg"
+    with open(path, "rb") as img:
+        return f"data:{mime};base64,{base64.b64encode(img.read()).decode()}"
 
 def ingestion_node(state: ProxyState) -> dict:
     summaries = {}
@@ -19,8 +28,8 @@ def ingestion_node(state: ProxyState) -> dict:
             elif "image" in f["content_type"]:
                 # llm describes image uploded (visible damage)
                 resp = llm.invoke([{"role":"user", "content": [
-                    {"content_type": "image_url", "image_url":{"url": to_base64(f["path"])}},
-                    {"content_type": "text", "text": "Describe all visible damage mechanisms in this failure photo. Be specific about material condition, fracture patterns, corrosion, and wear"}
+                    {"type": "image_url", "image_url":{"url": to_base64(f["path"])}},
+                    {"type": "text", "text": "Describe all visible damage mechanisms in this failure photo. Be specific about material condition, fracture patterns, corrosion, and wear"}
 
                 ]}])
                 dept_text.append(resp.content)

@@ -49,6 +49,11 @@ def mechanism_node(state: ProxyState) -> dict:
         candidates = candidates_text
     )
 
+    # engineer rejected the previous analysis: tell the model what to correct
+    feedback = state.get("review_feedback")
+    if feedback:
+        prompt += f"\nThe reviewing engineer rejected the previous analysis with this feedback. Address it:\n{feedback}\n"
+
     resp = llm.invoke([{"role":"user", "content": prompt}])
 
     try:
