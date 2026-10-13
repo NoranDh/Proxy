@@ -49,3 +49,6 @@ data/rag_faiss_index/
 
 # LangGraph checkpoint database (runtime-generated)
 checkpoint.db*
+
+# Local launcher with machine-specific Python paths
+start_demo.bat
